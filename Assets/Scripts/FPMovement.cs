@@ -9,7 +9,8 @@ public class FPMovement : MonoBehaviour
     public float JumpHeight;
     public float Gravity;
     private Rigidbody characterRigidbody;
-    private bool isGrounded;
+    private bool isGrounded = true;
+    // private int Ground;
     
     private void Start()
     {
@@ -19,6 +20,7 @@ public class FPMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // isGrounded = Physics.CheckSphere(characterTransform.position, 20.0f, 0);
         if (isGrounded){
             var tmp_Horizontal = Input.GetAxis("Horizontal");
             var tmp_Vertical = Input.GetAxis("Vertical");
@@ -39,6 +41,7 @@ public class FPMovement : MonoBehaviour
             }
         }
         characterRigidbody.AddForce(new Vector3(0, -Gravity * characterRigidbody.mass, 0));
+        // Debug.Log("isGrounded:" + isGrounded);
     }
     
     private float CalculateJumpHeightSpeed()
@@ -46,13 +49,34 @@ public class FPMovement : MonoBehaviour
         return Mathf.Sqrt(2 * Gravity * JumpHeight);
     }
     
-    private void OnCollisionStay(Collision _other)
+    private void OnCollisionStay(Collision collisionInfo)
     {
         isGrounded = true;
     }
     
-    private void onCollisionExit(Collision _other)
+    private void OnCollisionExit(Collision collisionInfo)
     {
+        // foreach (ContactPoint contact in collisionInfo.contacts)
+        // {
+        //     Debug.DrawRay(contact.point, contact.normal * 10, Color.white);
+        // }
+        // Debug.Log("OnCollisionExit");
         isGrounded = false;
     }
+
+
+    // void OnTriggerStay(Collider other)
+    // {
+    //     Debug.Log(other.tag);
+    //     if (other.tag == "Ground")
+    //     {
+    //         isGrounded = true;
+    //         Debug.Log("Grounded");
+    //     }
+    //     else
+    //     {
+    //         isGrounded = false;
+    //         Debug.Log("Not Grounded!");
+    //     }
+    // }
 }
